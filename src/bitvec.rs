@@ -49,6 +49,14 @@ impl BitVec {
         self.length += 1;
     }
 
+    pub fn push(&mut self, val: bool) {
+        if val {
+            self.push_true();
+        } else {
+            self.push_false();
+        }
+    }
+
     pub fn get(&self, idx: usize) -> bool {
         assert!(idx < self.length);
         let pos = Self::idx_to_pos(idx);
@@ -86,6 +94,21 @@ mod tests {
         let mut bv = BitVec::with_capacity(10);
         bv.push_true();
         assert_eq!(bv.get(1), true);
+    }
+
+    #[test]
+    fn test_across_edge() {
+        let mut x = BitVec::with_capacity(0);
+        for j in 0..2 {
+            for i in 0..64 {
+                x.push((i+j)%2 == 0);
+            }
+        }
+        for j in 0..2 {
+            for i in 0..64 {
+                assert_eq!(x.get(i+j*64), (i+j)%2 == 0);
+            }
+        }
     }
 
 }

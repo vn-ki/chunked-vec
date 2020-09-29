@@ -50,4 +50,27 @@ mod tests {
       assert_eq!(c.get(3), Some(&4));
    }
 
+   #[test]
+   fn append_and_get_over_edge() {
+      let mut c = ChunkedVecInt::new();
+      for _ in 0..2 {
+         for i in 0..64 {
+            if i % 2 == 0 {
+               c.append(Some(i));
+            } else {
+               c.append(None);
+            }
+         }
+      }
+      for j in 0..2 {
+         for i in 0..64 {
+            let curr = c.get(i + j*64);
+            if i % 2 == 0 {
+               assert_eq!(curr.unwrap(), &i);
+            } else {
+               assert!(curr.is_none());
+            }
+         }
+      }
+   }
 }
